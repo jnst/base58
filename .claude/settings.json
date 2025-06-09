@@ -2,6 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(go test:*)",
+      "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:github.com)",
       "Bash(go build:*)",
       "Bash(git add:*)",
