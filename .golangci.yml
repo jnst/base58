@@ -1,0 +1,158 @@
+run:
+  timeout: 1m
+  issues-exit-code: 1
+  tests: true
+
+output:
+  formats:
+    - format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+
+linters-settings:
+  govet:
+    enable-all: true
+  golint:
+    min-confidence: 0
+  gocyclo:
+    min-complexity: 15
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  depguard:
+    rules:
+      main:
+        deny:
+          - pkg: "github.com/sirupsen/logrus"
+            desc: "not allowed"
+          - pkg: "github.com/pkg/errors"
+            desc: "Should be replaced by standard lib errors package"
+  misspell:
+    locale: US
+  unused:
+    check-exported: false
+  unparam:
+    check-exported: false
+  nakedret:
+    max-func-lines: 30
+  prealloc:
+    simple: true
+    range-loops: true
+    for-loops: false
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - dupImport # https://github.com/go-critic/go-critic/issues/845
+      - ifElseChain
+      - octalLiteral
+      - whyNoLint
+      - wrapperFunc
+  funlen:
+    lines: 100
+    statements: 50
+  goimports:
+    local-prefixes: github.com/jnst/base58
+  revive:
+    min-confidence: 0
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  varnamelen:
+    min-name-length: 1
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - copyloopvar
+    - funlen
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - mnd
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - revive
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varnamelen
+    - whitespace
+
+issues:
+  exclude-dirs:
+    - vendor
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - mnd
+        - funlen
+        - goconst
+        - dupl
+        - gosec
+        - wsl
+        - lll
+        - govet
+    - path: cmd/
+      linters:
+        - mnd
+        - gosec
+        - wsl
+        - govet
+    - source: "func init"
+      linters:
+        - gochecknoinits
+    - linters:
+        - lll
+      source: "^//go:generate "
+
+  exclude-use-default: false
+  exclude:
+    # errcheck: Almost all programs ignore errors on these functions and in most cases it's ok
+    - Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*printf?|os\.(Un)?Setenv). is not checked
+    # govet: Common false positives
+    - (possible misuse of unsafe.Pointer|should have signature)
+    # staticcheck: Developers tend to write in C-style with an explicit 'break' in a 'switch', so it's ok to ignore
+    - ineffective break statement. Did you mean to break out of the outer loop
+    # gosec: Too many false-positives on 'unsafe' usage
+    - Use of unsafe calls should be audited
+    # gosec: Too many false-positives for parametrized shell calls
+    - Subprocess launch(ed with variable|ing should be audited)
+    # gosec: Duplicated errcheck checks
+    - G104
+    # gocritic: Too many false-positives. gocritic has been instrumented with a built-in check against file includes
+    - (comment on exported (method|function|type|const)|should have( a package)? comment|comment should be of the form)
+  # Maximum issues count per one linter. Set to 0 to disable. Default is 50.
+  max-issues-per-linter: 0
+  # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
+  max-same-issues: 0
+
+severity:
+  default-severity: error
+  case-sensitive: false

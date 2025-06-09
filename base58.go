@@ -5,7 +5,13 @@ import (
 	"math/big"
 )
 
-const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+const (
+	alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+	base58   = 58
+	// Buffer size calculation factor: log(256)/log(58) ≈ 1.38
+	bufferSizeFactor  = 138
+	bufferSizeDivisor = 100
+)
 
 var alphabetMap = make(map[byte]int)
 
@@ -33,23 +39,23 @@ func Encode(data []byte) string {
 		return result
 	}
 
-	size := (len(data)-leading)*138/100 + 1
+	size := (len(data)-leading)*bufferSizeFactor/bufferSizeDivisor + 1
 	encoded := make([]byte, size)
 
 	bigInt := new(big.Int).SetBytes(data[leading:])
-	base := big.NewInt(58)
+	baseInt := big.NewInt(base58)
 	zero := big.NewInt(0)
 
 	pos := size - 1
 	for bigInt.Cmp(zero) > 0 {
 		mod := new(big.Int)
-		bigInt.DivMod(bigInt, base, mod)
+		bigInt.DivMod(bigInt, baseInt, mod)
 		encoded[pos] = alphabet[mod.Int64()]
 		pos--
 	}
 
 	result := string(encoded[pos+1:])
-	
+
 	for i := 0; i < leading; i++ {
 		result = string(alphabet[0]) + result
 	}
@@ -58,7 +64,7 @@ func Encode(data []byte) string {
 }
 
 func Decode(s string) ([]byte, error) {
-	if len(s) == 0 {
+	if s == "" {
 		return []byte{}, nil
 	}
 
@@ -68,13 +74,13 @@ func Decode(s string) ([]byte, error) {
 	}
 
 	bigInt := big.NewInt(0)
-	base := big.NewInt(58)
+	baseInt := big.NewInt(base58)
 	for _, char := range []byte(s[leading:]) {
 		value, ok := alphabetMap[char]
 		if !ok {
 			return nil, errors.New("invalid base58 character")
 		}
-		bigInt.Mul(bigInt, base)
+		bigInt.Mul(bigInt, baseInt)
 		bigInt.Add(bigInt, big.NewInt(int64(value)))
 	}
 

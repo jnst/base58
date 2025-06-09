@@ -4,7 +4,10 @@
       "Bash(go test:*)",
       "WebFetch(domain:github.com)",
       "Bash(go build:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(golangci-lint run:*)",
+      "Bash(gofmt:*)",
+      "Bash(make:*)"
     ],
     "deny": []
   }
