@@ -88,7 +88,9 @@ echo "JxF12TrwUP45BMd" | ./base58 decode
 
 ## API
 
-### Encode
+### 標準版
+
+#### Encode
 
 ```go
 func Encode(data []byte) string
@@ -96,13 +98,42 @@ func Encode(data []byte) string
 
 バイト配列をBase58文字列にエンコードします。
 
-### Decode
+#### Decode
 
 ```go
 func Decode(s string) ([]byte, error)
 ```
 
 Base58文字列をバイト配列にデコードします。無効な文字が含まれる場合はエラーを返します。
+
+### 最適化版
+
+高性能が要求される場合は、最適化版を使用できます：
+
+#### EncodeOptimized
+
+```go
+func EncodeOptimized(data []byte) string
+```
+
+最適化されたエンコード関数。メモリアロケーションを大幅に削減（最大99%削減）。
+
+#### DecodeOptimized
+
+```go
+func DecodeOptimized(s string) ([]byte, error)
+```
+
+最適化されたデコード関数。メモリ効率が大幅に向上。
+
+### パフォーマンス比較
+
+| データサイズ | 標準版 | 最適化版 | アロケーション削減 |
+|-------------|-------|--------|------------------|
+| 32B         | 47 allocs | 2 allocs | 96%削減 |
+| 1KB         | 1,376 allocs | 2 allocs | 99.9%削減 |
+
+詳細は [OPTIMIZATION_RESULTS.md](OPTIMIZATION_RESULTS.md) を参照してください。
 
 ## 文字セット
 
@@ -133,6 +164,9 @@ go test -v
 
 # CLIテストのみ
 cd cmd && go test -v
+
+# 最適化版の正確性テスト
+go test -run=TestOptimized
 ```
 
 ### コード品質チェック
@@ -146,6 +180,22 @@ make lint
 
 # フォーマットのみ
 make fmt
+```
+
+### ベンチマーク
+
+```bash
+# 全ベンチマーク実行
+make bench
+
+# 最適化版の比較ベンチマーク
+make bench-compare
+
+# 最適化版のみのベンチマーク
+make bench-optimized
+
+# ベンチマーク結果をファイルに保存
+make bench-save
 ```
 
 ### ビルド

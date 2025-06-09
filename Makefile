@@ -47,5 +47,14 @@ bench-stability:
 bench-save:
 	go test -bench=. -benchmem > benchmark_results.txt
 
+# Run optimization comparison benchmarks
+bench-compare:
+	go test -bench=BenchmarkCompare -benchmem
+
+# Run optimized version benchmarks
+bench-optimized:
+	go test -bench=BenchmarkEncodeOptimized -benchmem
+	go test -bench=BenchmarkDecodeOptimized -benchmem
+
 # Default target
 all: check build
