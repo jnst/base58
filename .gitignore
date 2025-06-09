@@ -1,1 +1,6 @@
 settings.local.json
+
+# Build artifacts
+base58
+base58.exe
+*.exe
