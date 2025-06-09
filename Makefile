@@ -35,5 +35,17 @@ install-lint:
 # Full setup for development
 setup: deps install-lint
 
+# Run benchmarks
+bench:
+	go test -bench=. -benchmem
+
+# Run benchmarks multiple times for stability
+bench-stability:
+	go test -bench=. -count=3
+
+# Run benchmarks and save to file
+bench-save:
+	go test -bench=. -benchmem > benchmark_results.txt
+
 # Default target
 all: check build
