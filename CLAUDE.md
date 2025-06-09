@@ -1,0 +1,129 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is a high-performance Go Base58 encoding/decoding library with CLI tool, implementing the Bitcoin-standard character set. The project emphasizes performance optimization, test-driven development, and comprehensive benchmarking.
+
+## Core Development Commands
+
+### Building
+```bash
+make build          # Build CLI binary
+make clean          # Clean build artifacts
+```
+
+### Testing Strategy
+```bash
+# Fast testing for modified code only (speed prioritized)
+go test -run=TestSpecificFunction
+go test -run=TestOptimized         # Test optimized functions only
+go test ./cmd -run=TestCLI         # Test CLI functionality only
+
+# Full test suite (use sparingly)
+make test           # All tests
+go test -v          # Library tests with verbose output
+```
+
+### Code Quality (Required workflow)
+```bash
+make check          # Format + lint + test (complete workflow)
+make fmt            # Format code only
+make lint           # Lint only
+```
+
+### Benchmarking
+```bash
+make bench                  # All benchmarks
+make bench-compare         # Compare original vs optimized
+make bench-optimized       # Optimized version only
+make bench-save           # Save results to file
+```
+
+## Architecture
+
+### Core Implementation
+- **base58.go**: Core encode/decode functions using big.Int arithmetic
+- **base58_optimized.go**: Object pool optimized version (temporary dual approach)
+- **cmd/main.go**: CLI application with file/stdin support
+
+**IMPORTANT**: The dual implementation approach is temporary. Future work should refactor and consolidate into a single optimized implementation.
+
+### Performance Architecture
+- Object pools for big.Int and strings.Builder reuse
+- Optimized buffer size calculations
+- Memory allocation reduction (up to 99.9% reduction achieved)
+- Bitcoin-standard Base58 character set: `123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz`
+
+## Development Workflow
+
+**Critical**: Every implementation must follow this complete workflow:
+1. **Implementation** - Write/modify code
+2. **Lint + Test** - `make check` must pass
+3. **Documentation** - Update README.md, benchmarks, etc.
+
+This is a complete set - do not skip any step.
+
+## Testing Guidelines
+
+### Speed-Focused Testing
+- Run only tests for modified code to maintain development speed
+- Use specific test patterns: `go test -run=TestSpecificFunction`
+- Avoid full test suite during development iterations
+
+### Test Coverage
+- **base58_test.go**: Core functionality tests with edge cases
+- **base58_optimized_test.go**: Optimized version correctness validation
+- **cmd/main_test.go**: CLI functionality tests
+- Fuzz testing for random data validation
+- Round-trip testing for correctness
+
+## Configuration
+
+### Go Version
+- Go version is flexible (not strictly 1.24 required)
+
+### Linting
+- golangci-lint with strict configuration (.golangci.yml)
+- Test files have relaxed rules for benchmark code
+- Errcheck exclusions for benchmark functions
+
+## Performance Focus
+
+This is a performance-critical library:
+- Memory allocation reduction is primary goal
+- Benchmark-driven development approach
+- Maintain compatibility between standard and optimized implementations
+- Object pool patterns for resource reuse
+
+## Key Files
+
+- **Makefile**: All development commands
+- **.golangci.yml**: Strict linting configuration  
+- **base58_bench_test.go**: Comprehensive benchmarking
+- **BENCHMARK.md**: Performance analysis documentation
+- **OPTIMIZATION_RESULTS.md**: Optimization achievements documentation
+
+## Common Tasks
+
+### Adding New Functions
+1. Implement in base58.go
+2. Add corresponding optimized version (temporary)
+3. Write tests in base58_test.go
+4. Add benchmarks in base58_bench_test.go
+5. Run `make check`
+6. Update documentation
+
+### Performance Optimization
+1. Profile with benchmarks first
+2. Implement optimization
+3. Validate correctness with existing tests
+4. Measure improvement with benchmarks
+5. Update optimization documentation
+
+### CLI Modifications
+1. Modify cmd/main.go
+2. Test with cmd/main_test.go
+3. Validate with actual CLI usage
+4. Update help text and examples

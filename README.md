@@ -106,32 +106,15 @@ func Decode(s string) ([]byte, error)
 
 Base58文字列をバイト配列にデコードします。無効な文字が含まれる場合はエラーを返します。
 
-### 最適化版
+### パフォーマンス
 
-高性能が要求される場合は、最適化版を使用できます：
+高性能実装により、メモリアロケーションを大幅に削減：
 
-#### EncodeOptimized
-
-```go
-func EncodeOptimized(data []byte) string
-```
-
-最適化されたエンコード関数。メモリアロケーションを大幅に削減（最大99%削減）。
-
-#### DecodeOptimized
-
-```go
-func DecodeOptimized(s string) ([]byte, error)
-```
-
-最適化されたデコード関数。メモリ効率が大幅に向上。
-
-### パフォーマンス比較
-
-| データサイズ | 標準版 | 最適化版 | アロケーション削減 |
-|-------------|-------|--------|------------------|
-| 32B         | 47 allocs | 2 allocs | 96%削減 |
-| 1KB         | 1,376 allocs | 2 allocs | 99.9%削減 |
+| データサイズ | アロケーション数 | メモリ使用量 |
+|-------------|-----------------|-------------|
+| 32B         | 2 allocs | 96 B/op |
+| 1KB         | 2 allocs | 2,818 B/op |
+| 4KB         | 2 allocs | 12,338 B/op |
 
 詳細は [OPTIMIZATION_RESULTS.md](OPTIMIZATION_RESULTS.md) を参照してください。
 
@@ -165,8 +148,8 @@ go test -v
 # CLIテストのみ
 cd cmd && go test -v
 
-# 最適化版の正確性テスト
-go test -run=TestOptimized
+# ファズテストによる正確性テスト
+go test -run=TestFuzz
 ```
 
 ### コード品質チェック
