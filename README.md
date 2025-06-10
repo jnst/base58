@@ -13,16 +13,21 @@ Go言語で実装されたBase58エンコーディングライブラリとCLIツ
 
 ## インストール
 
+### ライブラリとして使用
 ```bash
 go get github.com/jnst/base58
 ```
 
-CLIツールをビルド:
+### CLIツールのインストール
+```bash
+go install github.com/jnst/base58/cmd/base58@latest
+```
 
+### ソースからビルド
 ```bash
 git clone https://github.com/jnst/base58.git
 cd base58
-go build -o base58 ./cmd
+make build
 ```
 
 ## ライブラリ使用例
@@ -146,7 +151,7 @@ make test
 go test -v
 
 # CLIテストのみ
-cd cmd && go test -v
+go test -run=TestCLI
 
 # ファズテストによる正確性テスト
 go test -run=TestFuzz

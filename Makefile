@@ -2,7 +2,7 @@
 
 # Build the CLI binary
 build:
-	go build -o base58 ./cmd
+	go build -o base58 ./cmd/base58
 
 # Run tests
 test:

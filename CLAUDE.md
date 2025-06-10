@@ -44,9 +44,8 @@ make bench-save           # Save results to file
 ## Architecture
 
 ### Core Implementation
-- **base58.go**: Core encode/decode functions using big.Int arithmetic
-- **base58_optimized.go**: Object pool optimized version (temporary dual approach)
-- **cmd/main.go**: CLI application with file/stdin support
+- **base58.go**: Core encode/decode functions using big.Int arithmetic with object pool optimization
+- **cmd/base58/main.go**: CLI application with file/stdin support
 
 **IMPORTANT**: The dual implementation approach is temporary. Future work should refactor and consolidate into a single optimized implementation.
 
@@ -102,6 +101,8 @@ This is a performance-critical library:
 - **Makefile**: All development commands
 - **.golangci.yml**: Strict linting configuration  
 - **base58_bench_test.go**: Comprehensive benchmarking
+- **cmd/base58/main.go**: CLI application
+- **cmd/base58/main_test.go**: CLI functionality tests
 - **BENCHMARK.md**: Performance analysis documentation
 - **OPTIMIZATION_RESULTS.md**: Optimization achievements documentation
 
@@ -123,7 +124,7 @@ This is a performance-critical library:
 5. Update optimization documentation
 
 ### CLI Modifications
-1. Modify cmd/main.go
-2. Test with cmd/main_test.go
+1. Modify cmd/base58/main.go
+2. Test with cmd/base58/main_test.go
 3. Validate with actual CLI usage
 4. Update help text and examples
