@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"io"
@@ -85,7 +84,7 @@ func encodeCommand(filename string, args []string) error {
 	} else if len(args) > 0 {
 		input = []byte(strings.Join(args, " "))
 	} else {
-		input, err = readStdin()
+		input, err = io.ReadAll(os.Stdin)
 		if err != nil {
 			return fmt.Errorf("reading stdin: %w", err)
 		}
@@ -109,7 +108,7 @@ func decodeCommand(filename string, args []string) error {
 	} else if len(args) > 0 {
 		input = strings.Join(args, " ")
 	} else {
-		data, err := readStdin()
+		data, err := io.ReadAll(os.Stdin)
 		if err != nil {
 			return fmt.Errorf("reading stdin: %w", err)
 		}
@@ -125,14 +124,3 @@ func decodeCommand(filename string, args []string) error {
 	return nil
 }
 
-func readStdin() ([]byte, error) {
-	scanner := bufio.NewScanner(os.Stdin)
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	if err := scanner.Err(); err != nil && err != io.EOF {
-		return nil, err
-	}
-	return []byte(strings.Join(lines, "\n")), nil
-}

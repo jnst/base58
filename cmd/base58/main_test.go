@@ -25,6 +25,24 @@ func TestCLIEncode(t *testing.T) {
 			args:     []string{"encode", ""},
 			expected: "\n",
 		},
+		{
+			name:     "encode hello world from stdin with newline",
+			args:     []string{"encode"},
+			input:    "Hello World\n",
+			expected: "2NEpo7TZRRrLZSi25\n",
+		},
+		{
+			name:     "encode hello world from stdin without newline",
+			args:     []string{"encode"},
+			input:    "Hello World",
+			expected: "JxF12TrwUP45BMd\n",
+		},
+		{
+			name:     "encode multiline from stdin",
+			args:     []string{"encode"},
+			input:    "Hello\nWorld",
+			expected: "JxF12TrkWyENMjy\n",
+		},
 	}
 
 	for _, tt := range tests {
@@ -56,6 +74,7 @@ func TestCLIDecode(t *testing.T) {
 	tests := []struct {
 		name     string
 		args     []string
+		input    string
 		expected string
 	}{
 		{
@@ -68,6 +87,18 @@ func TestCLIDecode(t *testing.T) {
 			args:     []string{"decode", ""},
 			expected: "",
 		},
+		{
+			name:     "decode from stdin with newline",
+			args:     []string{"decode"},
+			input:    "JxF12TrwUP45BMd\n",
+			expected: "Hello World",
+		},
+		{
+			name:     "decode from stdin without newline",
+			args:     []string{"decode"},
+			input:    "JxF12TrwUP45BMd",
+			expected: "Hello World",
+		},
 	}
 
 	for _, tt := range tests {
@@ -77,6 +108,10 @@ func TestCLIDecode(t *testing.T) {
 
 			var stdout bytes.Buffer
 			cmd.Stdout = &stdout
+
+			if tt.input != "" {
+				cmd.Stdin = strings.NewReader(tt.input)
+			}
 
 			err := cmd.Run()
 			if err != nil {
