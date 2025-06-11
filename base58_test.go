@@ -48,6 +48,47 @@ func TestEncode(t *testing.T) {
 			},
 			expected: "1qb3y62fmEEVTPySXPQ77WXok6H",
 		},
+		// Test cases from cryptocoinjs/bs58 and Nullus157/bs58-rs
+		{
+			name:     "cryptocoinjs/bs58: single byte 0x61",
+			input:    []byte{0x61},
+			expected: "2g",
+		},
+		{
+			name:     "cryptocoinjs/bs58: three 0x62 bytes",
+			input:    []byte{0x62, 0x62, 0x62},
+			expected: "a3gV",
+		},
+		{
+			name:     "Nullus157/bs58-rs: three 0x63 bytes",
+			input:    []byte{0x63, 0x63, 0x63},
+			expected: "aPEr",
+		},
+		{
+			name:     "Nullus157/bs58-rs: 4-byte sequence",
+			input:    []byte{0x57, 0x2e, 0x47, 0x94},
+			expected: "3EFU7m",
+		},
+		{
+			name:     "Nullus157/bs58-rs: another 4-byte sequence",
+			input:    []byte{0x10, 0xc8, 0x51, 0x1e},
+			expected: "Rt5zm",
+		},
+		{
+			name:     "Nullus157/bs58-rs: 5-byte sequence",
+			input:    []byte{0x51, 0x6b, 0x6f, 0xcd, 0x0f},
+			expected: "ABnLTmg",
+		},
+		{
+			name:     "cryptocoinjs/bs58: long string",
+			input:    []byte("simply a long string"),
+			expected: "2cFupjhnEsSn59qHXstmK2ffpLv2",
+		},
+		{
+			name:     "cryptocoinjs/bs58: multiple zero bytes",
+			input:    []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+			expected: "1111111111",
+		},
 	}
 
 	for _, tt := range tests {
@@ -164,6 +205,31 @@ func TestDecode(t *testing.T) {
 					t.Errorf("Decode(%q) = %v, want %v", tt.input, result, tt.expected)
 					break
 				}
+			}
+		})
+	}
+}
+
+func TestBitcoinAddressRoundTrip(t *testing.T) {
+	// Real Bitcoin addresses from mr-tron/base58 test cases
+	addresses := []string{
+		"1QCaxc8hutpdZ62iKZsn1TCG3nh7uPZojq",
+		"1DhRmSGnhPjUaVPAj48zgPV9e2oRhAQFUb",
+		"17LN2oPYRYsXS9TdYdXCCDvF2FegshLDU2",
+		"14h2bDLZSuvRFhUL45VjPHJcW667mmRAAn",
+	}
+
+	for _, addr := range addresses {
+		t.Run(addr, func(t *testing.T) {
+			decoded, err := Decode(addr)
+			if err != nil {
+				t.Errorf("Failed to decode Bitcoin address %s: %v", addr, err)
+				return
+			}
+
+			encoded := Encode(decoded)
+			if encoded != addr {
+				t.Errorf("Bitcoin address round trip failed: %s != %s", encoded, addr)
 			}
 		})
 	}
