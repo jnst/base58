@@ -4,3 +4,6 @@ settings.local.json
 /base58
 base58.exe
 *.exe
+
+# Benchmark results
+benchmark_results.txt
