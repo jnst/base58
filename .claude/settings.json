@@ -7,6 +7,7 @@
       "Bash(go build:*)",
       "Bash(golangci-lint run:*)",
       "Bash(gofmt:*)",
+      "Bash(grep:*)",
       "Bash(make:*)",
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:github.com)"
