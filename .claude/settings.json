@@ -2,6 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(ls:*)",
+      "Bash(find:*)",
       "Bash(git add:*)",
       "Bash(go test:*)",
       "Bash(go build:*)",
@@ -9,8 +10,7 @@
       "Bash(gofmt:*)",
       "Bash(grep:*)",
       "Bash(make:*)",
-      "WebFetch(domain:docs.anthropic.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:docs.anthropic.com)"
     ],
     "deny": []
   }
