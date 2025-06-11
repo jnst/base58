@@ -18,7 +18,6 @@ make clean          # Clean build artifacts
 ```bash
 # Fast testing for modified code only (speed prioritized)
 go test -run=TestSpecificFunction
-go test -run=TestOptimized         # Test optimized functions only
 go test ./cmd -run=TestCLI         # Test CLI functionality only
 
 # Full test suite (use sparingly)
@@ -47,7 +46,7 @@ make bench-save           # Save results to file
 - **base58.go**: Core encode/decode functions using big.Int arithmetic with object pool optimization
 - **cmd/base58/main.go**: CLI application with file/stdin support
 
-**IMPORTANT**: The dual implementation approach is temporary. Future work should refactor and consolidate into a single optimized implementation.
+The implementation uses object pools for big.Int and strings.Builder reuse to achieve high performance.
 
 ### Performance Architecture
 - Object pools for big.Int and strings.Builder reuse
@@ -73,8 +72,7 @@ This is a complete set - do not skip any step.
 
 ### Test Coverage
 - **base58_test.go**: Core functionality tests with edge cases
-- **base58_optimized_test.go**: Optimized version correctness validation
-- **cmd/main_test.go**: CLI functionality tests
+- **cmd/base58/main_test.go**: CLI functionality tests
 - Fuzz testing for random data validation
 - Round-trip testing for correctness
 
@@ -93,7 +91,7 @@ This is a complete set - do not skip any step.
 This is a performance-critical library:
 - Memory allocation reduction is primary goal
 - Benchmark-driven development approach
-- Maintain compatibility between standard and optimized implementations
+- Comprehensive benchmarking to measure performance improvements
 - Object pool patterns for resource reuse
 
 ## Key Files
@@ -110,11 +108,10 @@ This is a performance-critical library:
 
 ### Adding New Functions
 1. Implement in base58.go
-2. Add corresponding optimized version (temporary)
-3. Write tests in base58_test.go
-4. Add benchmarks in base58_bench_test.go
-5. Run `make check`
-6. Update documentation
+2. Write tests in base58_test.go
+3. Add benchmarks in base58_bench_test.go
+4. Run `make check`
+5. Update documentation
 
 ### Performance Optimization
 1. Profile with benchmarks first
