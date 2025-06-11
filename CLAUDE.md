@@ -78,7 +78,7 @@ This is a complete set - do not skip any step.
 ## Configuration
 
 ### Go Version
-- Go version is flexible (not strictly 1.24 required)
+- Requires Go 1.18 or later (for `any` type in object pools)
 
 ### Linting
 - golangci-lint with strict configuration (.golangci.yml)
