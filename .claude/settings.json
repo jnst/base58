@@ -1,14 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(go test:*)",
-      "WebFetch(domain:docs.anthropic.com)",
-      "WebFetch(domain:github.com)",
-      "Bash(go build:*)",
+      "Bash(ls:*)",
       "Bash(git add:*)",
+      "Bash(go test:*)",
+      "Bash(go build:*)",
       "Bash(golangci-lint run:*)",
       "Bash(gofmt:*)",
-      "Bash(make:*)"
+      "Bash(make:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }
