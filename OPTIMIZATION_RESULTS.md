@@ -109,8 +109,6 @@ Optimized:  71,471 ns/op   2,049 B/op    2 allocs/op
 
 ## 使用方法
 
-現在の最適化版は`base58_optimized.go`に実装されています：
-
 ```go
 // 最適化版を使用
 encoded := base58.EncodeOptimized(data)
