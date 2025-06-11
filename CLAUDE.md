@@ -35,9 +35,8 @@ make lint           # Lint only
 ### Benchmarking
 ```bash
 make bench                  # All benchmarks
-make bench-compare         # Compare original vs optimized
-make bench-optimized       # Optimized version only
-make bench-save           # Save results to file
+make bench-stability        # Run benchmarks multiple times
+make bench-save             # Save results to file
 ```
 
 ## Architecture
